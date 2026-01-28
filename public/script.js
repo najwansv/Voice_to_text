@@ -117,8 +117,10 @@ function handleFile(file) {
     return;
   }
 
-  if (file.size > 100 * 1024 * 1024) {
-    showToast('Ukuran file maksimal 100MB!', 'error');
+  const maxSize = 5 * 1024 * 1024; // 5MB
+  if (file.size > maxSize) {
+    const sizeMB = (file.size / (1024 * 1024)).toFixed(1);
+    showToast(`File terlalu besar (${sizeMB}MB)! Maksimal 5MB untuk Vercel.`, 'error');
     return;
   }
 
@@ -163,7 +165,24 @@ async function startTranscription() {
       body: formData
     });
 
-    const data = await response.json();
+    // Check content type before parsing
+    const contentType = response.headers.get('content-type');
+    
+    let data;
+    if (contentType && contentType.includes('application/json')) {
+      data = await response.json();
+    } else {
+      // If not JSON, get text for debugging
+      const errorText = await response.text();
+      console.error('Server response:', errorText);
+      
+      // Check for specific Vercel errors
+      if (errorText.includes('Request Entity Too Large') || errorText.includes('FUNCTION_PAYLOAD_TOO_LARGE')) {
+        throw new Error('File terlalu besar! Maksimal 5MB untuk Vercel. Coba gunakan file yang lebih kecil.');
+      }
+      
+      throw new Error('Server tidak mengembalikan response yang valid');
+    }
 
     if (!response.ok) {
       throw new Error(data.error || 'Terjadi kesalahan');
@@ -450,10 +469,8 @@ function downloadResult() {
 }
 
 function cleanup() {
-  // Cleanup media file on server when leaving page
-  if (currentFileId) {
-    navigator.sendBeacon(`/api/media/${currentFileId}`, '');
-  }
+  // No cleanup needed for Vercel data URL approach
+  console.log('Page unloading - no server cleanup required');
 }
 
 function showToast(message, type = '') {

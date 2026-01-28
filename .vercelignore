@@ -1,0 +1,9 @@
+# Vercel ignore
+node_modules/
+uploads/
+.env
+.git/
+*.log
+server.js
+README.md
+.gitignore
