@@ -8,8 +8,8 @@ const CONFIG = {
   
   // Production - Ngrok backend
   production: {
-    API_BASE_URL: 'https://your-ngrok-url.ngrok-free.app/api', // Ganti dengan ngrok URL Anda
-    MEDIA_BASE_URL: 'https://your-ngrok-url.ngrok-free.app/media'
+    API_BASE_URL: 'https://nonmalicious-coinable-josefine.ngrok-free.dev/api', // Ganti dengan ngrok URL Anda
+    MEDIA_BASE_URL: 'https://nonmalicious-coinable-josefine.ngrok-free.dev/media'
   }
 };
 

@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 3000;
 const corsOptions = {
   origin: [
     'http://localhost:3000',
-    'https://yourusername.github.io', // Ganti dengan GitHub Pages URL Anda
+    'https://nonmalicious-coinable-josefine.ngrok-free.dev', // Ganti dengan GitHub Pages URL Anda
     /^https:\/\/.*\.ngrok\.io$/,
     /^https:\/\/.*\.ngrok-free\.app$/
   ],
