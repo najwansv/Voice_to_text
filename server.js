@@ -10,7 +10,16 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
-app.use(cors());
+const corsOptions = {
+  origin: [
+    'http://localhost:3000',
+    'https://yourusername.github.io', // Ganti dengan GitHub Pages URL Anda
+    /^https:\/\/.*\.ngrok\.io$/,
+    /^https:\/\/.*\.ngrok-free\.app$/
+  ],
+  credentials: true
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.static('public'));
 
@@ -144,7 +153,25 @@ setInterval(() => {
 
 // Health check
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'OK', timestamp: new Date().toISOString() });
+  res.json({ 
+    status: 'OK', 
+    timestamp: new Date().toISOString(),
+    version: '1.0.0',
+    environment: process.env.NODE_ENV || 'development'
+  });
+});
+
+// API info untuk frontend
+app.get('/api/info', (req, res) => {
+  res.json({
+    name: 'Voice to Text API',
+    version: '1.0.0',
+    endpoints: {
+      transcribe: '/api/transcribe',
+      health: '/api/health',
+      media: '/media/:filename'
+    }
+  });
 });
 
 app.listen(PORT, () => {
